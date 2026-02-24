@@ -9,4 +9,5 @@ dependencies = [
     "numpy>=2.4.2",
     "requests>=2.32.5",
     "torch>=2.10.0",
+    "pytest>=8.22"
 ]
