@@ -154,6 +154,26 @@ def decode(
 def gutenberg_to_tokenized(
 	ids: list[int],
 ) -> tuple[str, list[str]]:
+	"""
+	# Gutenberg to Tokenized
+
+	Take in a list of ids for books from Project Gutenberg and output a raw string of the content of the books and a list of the tokenized words.
+
+	## Parameters
+	* ids: list of ids of books from Project Gutenberg
+
+	## Output
+	* String of raw words from the books
+	* List of tokens from the books
+
+	## Example
+
+	The following example represents getting the raw text and tokens from Plato and Aristotle books.
+	
+	```python
+	data, data_tokenized = gutenberg_to_tokenized([6762, 1497, 8438, 1600, 1656])
+	```
+	"""
 	
 	data_raw = get_many_books(ids)
 	data = " ".join(process_text(x) for x in data_raw)
