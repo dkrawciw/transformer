@@ -18,7 +18,7 @@ class Attention(nn.Module):
         self.M = torch.triu(torch.ones((config.n_context, config.n_context)), diagonal=1)
         self.M = self.M.masked_fill(self.M.bool(), -torch.inf)
         self.second_matmult = nn.Linear(config.d_model, config.d_model, bias=False)
-        self.softmax = nn.Softmax()
+        self.softmax = nn.Softmax(dim=1)
     
     def forward(self, x):
         xwx = self.bilinear(x, x) # d_m x d_m
