@@ -13,3 +13,6 @@ dependencies = [
     "setuptools>=82.0.0",
     "jaxtyping>=0.3.7",
 ]
+
+[tool.setuptools.packages.find]
+where = ["src"]
