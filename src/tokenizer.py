@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 def get_gutenberg_book(
 	id: int | None = 84,
-	data_temp: Path | str = "../data/gutenberg_data",
+	data_temp_raw: Path | str = "../data/gutenberg_data",
 	remove_gutenberg_meta: bool = True,
 ) -> str:
 	"""
@@ -17,7 +17,7 @@ def get_gutenberg_book(
 	This method gets the text of a particular book from Project Gutenberg
 	"""
 	
-	data_temp: Path = Path(data_temp)
+	data_temp: Path = Path(data_temp_raw)
 	data_temp.mkdir(parents=True, exist_ok=True)
 	
 	url: str = f"https://www.gutenberg.org/cache/epub/{id}/pg{id}.txt"
