@@ -5,9 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "jaxtyping>=0.3.7",
     "numpy>=2.4.2",
     "requests>=2.32.5",
     "torch>=2.10.0",
-    "pytest>=8.22"
+    "pytest>=8.22",
+    "tqdm>=4.67.3",
+    "setuptools>=82.0.0",
+    "jaxtyping>=0.3.7",
 ]
