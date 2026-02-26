@@ -3,7 +3,7 @@ import numpy as np
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-from tokenizer import (
+from src.tokenizer import (
     process_text,
     tokenize,
     encode,

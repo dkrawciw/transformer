@@ -14,14 +14,17 @@ class Attention(nn.Module):
     def __init__(self, config: Config):
         super().__init__()
         # self.W_qk = nn.Linear(config.d_model, config.d_vocab)
-        self.bilinear = nn.Bilinear(config.d_model, config.d_model, config.n_context, bias=False)
+        self.Wk = nn.Linear(config.d_model, config.d_hidden, bias=False)
+        self.Wq = nn.Linear(config.d_model, config.d_hidden, bias=False)
         self.M = torch.triu(torch.ones((config.n_context, config.n_context)), diagonal=1)
         self.M = self.M.masked_fill(self.M.bool(), -torch.inf)
         self.second_matmult = nn.Linear(config.d_model, config.d_model, bias=False)
         self.softmax = nn.Softmax(dim=1)
     
     def forward(self, x):
-        xwx = self.bilinear(x, x) # d_m x d_m
+        xwk = self.Wk(x)
+        xwq = self.Wq(x)
+        xwx = xwq @ xwk.T
         x_masked = xwx+ self.M 
         x_softmaxed = self.softmax(x_masked)
         x_fin = x_softmaxed@x
@@ -56,11 +59,15 @@ class TransformerBlock(nn.Module):
 class Transformer(nn.Module):
     def __init__(self, config:Config):
         super().__init__()
+        self.config = config
         self.embedding = nn.Embedding(num_embeddings=config.d_vocab, embedding_dim=config.d_model)
         self.transformerBlock = nn.ModuleList([TransformerBlock(config) for _ in range(config.n_layers)])
 
     def forward(self, x):
         x = self.embedding(x)
+        x = x.reshape(self.config.n_context, self.config.d_model)
+        print(x.shape)
         for i, l in enumerate(self.transformerBlock):
             x = self.transformerBlock[i](x)
+            print(x.shape)
         return x
