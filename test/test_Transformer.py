@@ -8,7 +8,7 @@ config = Config(
     d_model = 5,
     d_vocab = 10,
     d_hidden = 15,
-    n_context = 20,
+    n_context = 15,
     n_layers = 2,
 )
 
@@ -35,7 +35,7 @@ class TestTransformerBlock:
 
 class TestTransformer:
     def test_transformer_size(self):
-        x0 = torch.randint(low=0, high=config.d_vocab, size = (1, config.n_context))
+        x0 = torch.randint(low=0, high=config.d_vocab, size = (1, 4))
         tf = Transformer(config=config)
         x1 = tf(x0)
         assert x1.shape == (config.n_context, config.d_model)

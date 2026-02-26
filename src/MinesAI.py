@@ -65,11 +65,22 @@ class MinesAI:
             # Every data instance is an input + label pair
             inputs, labels = data
 
+            inputs = inputs.unsqueeze(0)
+            labels = labels.unsqueeze(0)
+
+            if inputs.shape[1] < self.config.n_context:
+                inputs = torch.nn.functional.pad(inputs, (0, self.config.n_context - inputs.shape[1]), value=0)
+                labels = torch.nn.functional.pad(labels, (0, self.config.n_context - labels.shape[1]), value=0)
+
             # Zero your gradients for every batch!
             self.optimizer.zero_grad()
-
+            
             # Make predictions for this batch
+            #print(f"gaah: {inputs.shape}")
+            
+            #print(inputs.shape)
             outputs = self.model(inputs)
+            print(outputs.shape)
 
             # Compute the loss and its gradients
             loss = self.loss_fn(outputs, labels)
@@ -132,3 +143,7 @@ def main():
         n_context = 20,
         n_layers = 2,
     )
+    print("ran")
+
+if __name__ == "__main__":
+    main()
