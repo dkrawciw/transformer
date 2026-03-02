@@ -64,14 +64,11 @@ class Transformer(nn.Module):
         self.pos_embedding = nn.Embedding(config.n_context, config.d_model)
         self.transformerBlock = nn.ModuleList([TransformerBlock(config) for _ in range(config.n_layers)])
 
-    def forward(self, x): # x needs to be (1, x_len) with x_len <= n_context
-        #print(x.shape)
-        
-        x = self.embedding(x) + self.pos_embedding(torch.arange(x.size(1)))
-        #print(x.shape)
-        x = x.reshape(self.config.n_context, self.config.d_model)
-        #print(x.shape)
+    def forward(self, x):
+        # Embedding with word AND word position
+        x = self.embedding(x) + self.pos_embedding(torch.arange(x.shape[0]))
+  
         for i, l in enumerate(self.transformerBlock):
             x = self.transformerBlock[i](x)
-            #print(x.shape)
+
         return x

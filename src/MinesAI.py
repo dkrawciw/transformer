@@ -47,7 +47,7 @@ class MinesAI:
         # Variables for training the model
         self.data_encoded = encode(self.training_data, self.vocab_dict)
         self.training_data = torch.utils.data.TensorDataset(torch.from_numpy(self.data_encoded[:-1]),torch.from_numpy(self.data_encoded[1:]))
-        self.training_loader = torch.utils.data.DataLoader(self.training_data, batch_size=4, shuffle=True)
+        self.training_loader = torch.utils.data.DataLoader(self.training_data, batch_size=self.config.n_context, shuffle=True)
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=0.001, momentum=0.9)
         self.loss_fn = torch.nn.CrossEntropyLoss()
 
@@ -65,22 +65,10 @@ class MinesAI:
             # Every data instance is an input + label pair
             inputs, labels = data
 
-            inputs = inputs.unsqueeze(0)
-            labels = labels.unsqueeze(0)
-
-            if inputs.shape[1] < self.config.n_context:
-                inputs = torch.nn.functional.pad(inputs, (0, self.config.n_context - inputs.shape[1]), value=0)
-                labels = torch.nn.functional.pad(labels, (0, self.config.n_context - labels.shape[1]), value=0)
-
-            # Zero your gradients for every batch!
+            # Zero your gradients for every batch
             self.optimizer.zero_grad()
             
-            # Make predictions for this batch
-            #print(f"gaah: {inputs.shape}")
-            
-            #print(inputs.shape)
             outputs = self.model(inputs)
-            print(outputs.shape)
 
             # Compute the loss and its gradients
             loss = self.loss_fn(outputs, labels)
@@ -143,7 +131,6 @@ def main():
         n_context = 20,
         n_layers = 2,
     )
-    print("ran")
 
 if __name__ == "__main__":
     main()
