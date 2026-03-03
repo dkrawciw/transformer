@@ -147,6 +147,8 @@ def encode(
 	for word in text:
 		if word in vocab_dict:
 			token_list.append(vocab_dict[word])
+	if len(token_list) == 0:
+		token_list = [0]
 
 	return np.array(token_list)
 
