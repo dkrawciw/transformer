@@ -143,7 +143,12 @@ def encode(
 ) -> Int[np.ndarray, " n_tokens"]:
 	if isinstance(text, str):
 		text = tokenize(text)
-	return np.array([vocab_dict[word] for word in text])
+	token_list = []
+	for word in text:
+		if word in vocab_dict:
+			token_list.append(vocab_dict[word])
+
+	return np.array(token_list)
 
 def decode(
 	encoded_text: Int[np.ndarray, " n_tokens"] | list[int],
