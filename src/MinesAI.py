@@ -2,6 +2,8 @@ import torch
 from tqdm import tqdm
 from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
+from dataclasses import asdict
+import traceback
 
 # Our own classes/functions
 from Transformer import Config, Transformer
@@ -41,6 +43,7 @@ class MinesAI:
             n_layers = n_layers,
         )
 
+
         # Instantiate the model object to be trained
         self.model = Transformer(self.config)
 
@@ -53,6 +56,7 @@ class MinesAI:
 
         # train the model on the data
         self.__train_model()
+        
 
     def __train_one_epoch(self, epoch_index: int, tb_writer: SummaryWriter):
         running_loss = 0.
@@ -63,12 +67,27 @@ class MinesAI:
         # index and do some intra-epoch reporting
         for i, data in tqdm(enumerate(self.training_loader), desc="Training model over batches of data", colour="blue"):
             # Every data instance is an input + label pair
+
+            
+            if i == len(self.training_loader)-1:
+                break
+
             inputs, labels = data
 
             # Zero your gradients for every batch
             self.optimizer.zero_grad()
             
-            outputs = self.model(inputs)
+
+            try:
+                outputs = self.model(inputs)
+            except Exception as e:
+                print("Training failed.")
+                print("Config:")
+                for name, value in asdict(self.config).items():
+                    print(f"  {name} = {value}")
+                print(len(inputs))
+                traceback.print_exc()
+                raise
 
             # Compute the loss and its gradients
             loss = self.loss_fn(outputs, labels)
@@ -125,7 +144,8 @@ class MinesAI:
 
 def main():
     ai = MinesAI(
-        gutenberg_ids = [6762, 1497, 8438, 1600, 1656],
+        #gutenberg_ids = [6762, 1497, 8438, 1600, 1656],
+        gutenberg_ids= [6762],
         d_model = 10,
         d_hidden = 15,
         n_context = 20,

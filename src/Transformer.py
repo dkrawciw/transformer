@@ -71,4 +71,5 @@ class Transformer(nn.Module):
         for i, l in enumerate(self.transformerBlock):
             x = self.transformerBlock[i](x)
 
+        x = x @ self.embedding.weight.T
         return x
