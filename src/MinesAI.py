@@ -159,22 +159,31 @@ class MinesAI:
             epoch_number += 1
 
     def generate_text(self, text: str, max_length: int):
+        #print(self.vocab_dict)
+        original_text = text
         text_tokenized = torch.from_numpy(encode(text=text.lower(), vocab_dict=self.vocab_dict))
         diff_from_n_context = text_tokenized.shape[0] - self.config.n_context
         if diff_from_n_context > 0:
             text_tokenized = text_tokenized[diff_from_n_context: ]
         elif diff_from_n_context < 0:
             text_tokenized = torch.nn.functional.pad(text_tokenized, (-1*diff_from_n_context, 0))
-        # print(text_tokenized)
         self.model.eval()
         
-        with torch.no_grad():
-            output = self.model(text_tokenized)
 
-        probs = torch.softmax(output[-1], dim=0)
-        output_token = torch.multinomial(probs, num_samples=1)
-        output_text = decode(output_token.numpy(), vocab_arr=self.vocab_arr)
-        return output_text
+        for i in range(max_length):
+            text_tokenized = text_tokenized[-self.config.n_context:] 
+
+            with torch.no_grad():
+                output = self.model(text_tokenized)
+
+            probs = torch.softmax(output[-1], dim=0)
+            output_token = torch.multinomial(probs, num_samples=1)
+            text_tokenized = torch.cat([text_tokenized, output_token])
+        
+        new_tokens = text_tokenized[-max_length:]
+        new_text = decode(new_tokens.numpy(), vocab_arr=self.vocab_arr)
+
+        return original_text + " " + new_text
     
     def save_model(self) -> None:
         with open(DATA_DIR / "saved_model.pkl", "wb") as pkl_file:
