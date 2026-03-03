@@ -142,15 +142,39 @@ class MinesAI:
 
             epoch_number += 1
 
+    def generate_text(self, text: str, max_length: int):
+        #print(self.vocab_dict)
+        text_tokenized = torch.from_numpy(encode(text=text.lower(), vocab_dict=self.vocab_dict))
+        diff_from_n_context = text_tokenized.shape[0] - self.config.n_context
+        if diff_from_n_context > 0:
+            text_tokenized = text_tokenized[diff_from_n_context: ]
+        elif diff_from_n_context < 0:
+            text_tokenized = torch.nn.functional.pad(text_tokenized, (-1*diff_from_n_context, 0))
+        print(text_tokenized)
+        self.model.eval()
+        
+        with torch.no_grad():
+            output = self.model(text_tokenized)
+
+        probs = torch.softmax(output[-1], dim=0)
+        output_token = torch.multinomial(probs, num_samples=1)
+        output_text = decode(output_token.numpy(), vocab_arr=self.vocab_arr)
+        return output_text
+        
+
 def main():
     ai = MinesAI(
         #gutenberg_ids = [6762, 1497, 8438, 1600, 1656],
         gutenberg_ids= [6762],
-        d_model = 10,
+        d_model = 10, 
         d_hidden = 15,
         n_context = 20,
         n_layers = 2,
     )
+
+    print(ai.generate_text("Homer is a poet who writes about", 20))
+
+
 
 if __name__ == "__main__":
     main()
