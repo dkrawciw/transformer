@@ -25,10 +25,12 @@ class Attention(nn.Module):
         self.softmax = nn.Softmax(dim=1)
     
     def forward(self, x):
+        # get n_c from x
+        n_c = x.shape[0]
         xwk = self.Wk(x)
         xwq = self.Wq(x)
         xwx = xwq @ xwk.T
-        x_masked = xwx+ self.M 
+        x_masked = xwx+ self.M[:n_c, :n_c] # index to make M square n_c x n_c
         x_softmaxed = self.softmax(x_masked)
         x_fin = x_softmaxed@x
         x_fin = self.second_matmult(x_fin)
