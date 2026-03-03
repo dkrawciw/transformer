@@ -4,6 +4,7 @@ from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
 from dataclasses import asdict
 import traceback
+import matplotlib.pyplot as plt
 
 # Our own classes/functions
 from Transformer import Config, Transformer
@@ -61,12 +62,16 @@ class MinesAI:
         self.training_loader = torch.utils.data.DataLoader(self.training_data, batch_size=self.config.n_context, shuffle=True)
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=0.001, momentum=0.9)
         self.loss_fn = torch.nn.CrossEntropyLoss()
+        self.loss_List = []
 
         # train the model on the data
         self.__train_model()
 
         self.save_model()
-        
+    
+    
+    def getModelLoss(self):
+        return self.loss_List
 
     def __train_one_epoch(self, epoch_index: int, tb_writer: SummaryWriter):
         running_loss = 0.
@@ -111,6 +116,7 @@ class MinesAI:
             if i % 1000 == 999:
                 last_loss = running_loss / 1000 # loss per batch
                 print('  batch {} loss: {}'.format(i + 1, last_loss))
+                self.loss_List.append(last_loss)
                 tb_x = epoch_index * len(self.training_loader) + i + 1
                 tb_writer.add_scalar('Loss/train', last_loss, tb_x)
                 running_loss = 0.
@@ -186,6 +192,22 @@ class MinesAI:
 def main():
     if (DATA_DIR / "saved_model.pkl").exists():
         ai = MinesAI.load_model()
+        # save a loss curve
+        train_losses = ai.getModelLoss()
+        batches = []
+        for i in range(1, len(train_losses)+1):
+            batches.append(i * 1000)
+
+
+        # Plotting
+        plt.plot(batches, train_losses, label='Training Loss')
+        plt.title('Training Loss Curve')
+        plt.xlabel('Batchs')
+        plt.ylabel('Loss')
+        plt.legend()
+        plt.savefig("LossCurve.jpg", format='jpeg', dpi=100)
+    
+        print(ai.generate_text("Homer is a poet who writes about", 20))
     else:
         ai = MinesAI(
             #gutenberg_ids = [6762, 1497, 8438, 1600, 1656],
@@ -197,7 +219,22 @@ def main():
             n_layers = 10,
         )
 
-    print(ai.generate_text("Homer is a poet who writes about", 20))
+        # save a loss curve
+        train_losses = ai.getModelLoss()
+        batches = []
+        for i in range(1, len(train_losses)+1):
+            batches.append(i * 1000)
+
+
+        # Plotting
+        plt.plot(batches, train_losses, label='Training Loss')
+        plt.title('Training Loss Curve')
+        plt.xlabel('Batchs')
+        plt.ylabel('Loss')
+        plt.legend()
+        plt.savefig("LossCurve.jpg", format='jpeg', dpi=100)
+    
+        print(ai.generate_text("Homer is a poet who writes about", 20))
 
 
 if __name__ == "__main__":
