@@ -14,6 +14,12 @@ from tokenizer import (
     decode,
 )
 
+# Create a directory for trained object saves
+import pickle as pkl
+from pathlib import Path
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DATA_DIR.mkdir(exist_ok=True)
+
 class MinesAI:
     """
     # MinesAI
@@ -58,6 +64,8 @@ class MinesAI:
 
         # train the model on the data
         self.__train_model()
+
+        self.save_model()
         
 
     def __train_one_epoch(self, epoch_index: int, tb_writer: SummaryWriter):
@@ -162,9 +170,13 @@ class MinesAI:
         output_token = torch.multinomial(probs, num_samples=1)
         output_text = decode(output_token.numpy(), vocab_arr=self.vocab_arr)
         return output_text
-        
+    
+    def save_model(self, file_name: str = "saved_model.pkl") -> None:
+        with open(DATA_DIR / file_name, "wb") as pkl_file:
+            pkl.dump(self, pkl_file)
 
 def main():
+    # Instantiate and save the model
     ai = MinesAI(
         #gutenberg_ids = [6762, 1497, 8438, 1600, 1656],
         gutenberg_ids= [6762],
@@ -174,6 +186,11 @@ def main():
         n_context = 20,
         n_layers = 10,
     )
+
+    # # Code to load object
+    # with open(DATA_DIR / "saved_model.pkl", 'rb') as pkl_file:
+    #     ai = pkl.load(pkl_file)
+
 
     print(ai.generate_text("Homer is a poet who writes about", 20))
 
