@@ -153,14 +153,13 @@ class MinesAI:
             epoch_number += 1
 
     def generate_text(self, text: str, max_length: int):
-        #print(self.vocab_dict)
         text_tokenized = torch.from_numpy(encode(text=text.lower(), vocab_dict=self.vocab_dict))
         diff_from_n_context = text_tokenized.shape[0] - self.config.n_context
         if diff_from_n_context > 0:
             text_tokenized = text_tokenized[diff_from_n_context: ]
         elif diff_from_n_context < 0:
             text_tokenized = torch.nn.functional.pad(text_tokenized, (-1*diff_from_n_context, 0))
-        print(text_tokenized)
+        # print(text_tokenized)
         self.model.eval()
         
         with torch.no_grad():
