@@ -29,7 +29,7 @@ class MinesAI:
     *Note:* This model is only trained on data from Project Guttenberg
     """
 
-    def __init__(self, 
+    def __init__(self,
                  gutenberg_ids: list[int],
                  d_model: int,
                  d_hidden: int,
@@ -171,29 +171,34 @@ class MinesAI:
         output_text = decode(output_token.numpy(), vocab_arr=self.vocab_arr)
         return output_text
     
-    def save_model(self, file_name: str = "saved_model.pkl") -> None:
-        with open(DATA_DIR / file_name, "wb") as pkl_file:
+    def save_model(self) -> None:
+        with open(DATA_DIR / "saved_model.pkl", "wb") as pkl_file:
             pkl.dump(self, pkl_file)
+    
+    @staticmethod
+    def load_model():
+        assert (DATA_DIR / "saved_model.pkl").exists()
+
+        with open(DATA_DIR / "saved_model.pkl", "rb") as pkl_file:
+            ai = pkl.load(pkl_file)
+        
+        return ai
 
 def main():
-    # Instantiate and save the model
-    ai = MinesAI(
-        #gutenberg_ids = [6762, 1497, 8438, 1600, 1656],
-        gutenberg_ids= [6762],
-        d_model = 10, 
-        d_hidden = 15,
-        d_head = 2,
-        n_context = 20,
-        n_layers = 10,
-    )
-
-    # # Code to load object
-    # with open(DATA_DIR / "saved_model.pkl", 'rb') as pkl_file:
-    #     ai = pkl.load(pkl_file)
-
+    if (DATA_DIR / "saved_model.pkl").exists():
+        ai = MinesAI.load_model()
+    else:
+        ai = MinesAI(
+            #gutenberg_ids = [6762, 1497, 8438, 1600, 1656],
+            gutenberg_ids= [6762],
+            d_model = 10, 
+            d_hidden = 15,
+            d_head = 2,
+            n_context = 20,
+            n_layers = 10,
+        )
 
     print(ai.generate_text("Homer is a poet who writes about", 20))
-
 
 
 if __name__ == "__main__":
