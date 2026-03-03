@@ -7,6 +7,7 @@ class Config:
     d_model: int
     d_vocab: int
     d_hidden: int
+    d_head: int
     n_context: int
     n_layers: int
 
@@ -14,8 +15,8 @@ class Attention(nn.Module):
     def __init__(self, config: Config):
         super().__init__()
         # self.W_qk = nn.Linear(config.d_model, config.d_vocab)
-        self.Wk = nn.Linear(config.d_model, config.d_hidden, bias=False)
-        self.Wq = nn.Linear(config.d_model, config.d_hidden, bias=False)
+        self.Wk = nn.Linear(config.d_model, config.d_head, bias=False)
+        self.Wq = nn.Linear(config.d_model, config.d_head, bias=False)
         self.M = torch.triu(torch.ones((config.n_context, config.n_context)), diagonal=1)
         self.M = self.M.masked_fill(self.M.bool(), -torch.inf)
         self.second_matmult = nn.Linear(config.d_model, config.d_model, bias=False)

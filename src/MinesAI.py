@@ -27,6 +27,7 @@ class MinesAI:
                  gutenberg_ids: list[int],
                  d_model: int,
                  d_hidden: int,
+                 d_head: int,
                  n_context: int,
                  n_layers: int,
     ):
@@ -37,8 +38,9 @@ class MinesAI:
         # Set all of the configurations based off of parameters and word dictionary from Project Gutenberg list
         self.config = Config(
             d_model = d_model, 
-            d_vocab = len(self.vocab_dict), 
+            d_vocab = len(self.vocab_dict),
             d_hidden = d_hidden, 
+            d_head=d_head,
             n_context = n_context, 
             n_layers = n_layers,
         )
@@ -168,8 +170,9 @@ def main():
         gutenberg_ids= [6762],
         d_model = 10, 
         d_hidden = 15,
+        d_head = 2,
         n_context = 20,
-        n_layers = 2,
+        n_layers = 10,
     )
 
     print(ai.generate_text("Homer is a poet who writes about", 20))
