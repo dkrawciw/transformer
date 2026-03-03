@@ -167,8 +167,8 @@ class MinesAI:
         diff_from_n_context = text_tokenized.shape[0] - self.config.n_context
         if diff_from_n_context > 0:
             text_tokenized = text_tokenized[diff_from_n_context: ]
-        elif diff_from_n_context < 0:
-            text_tokenized = torch.nn.functional.pad(text_tokenized, (-1*diff_from_n_context, 0))
+        
+
         self.model.eval()
         
 
@@ -218,17 +218,18 @@ def main():
         plt.ylabel('Loss')
         plt.legend()
         plt.savefig("LossCurve.jpg", format='jpeg', dpi=100)
-        print(ai.generate_text("Plato's favorite color is", 5, 0.75))
+        print(ai.generate_text("my name is", 1, 1))
+
     else:
         ai = MinesAI(
             #aristotle politics, plato republic, aristotle ethics, plato symposium, plato apology, iliad, odyssey, greek tragedies
             #aristophanes lysistrata, herodotus histories x2, xenophon anabasis, xenophon hellenica, athenian constitution, history of pelo. war
-            gutenberg_ids = [6762, 1497, 8438, 1600, 1656, 2199, 1727, 7073, 7700, 2707, 2456, 1170, 1174, 26095, 7142],
-            #gutenberg_ids= [6762],
-            d_model = 64, 
-            d_hidden = 4*64,
-            d_head = 16,
-            n_context = 32,
+            #gutenberg_ids = [6762, 1497, 8438, 1600, 1656, 2199, 1727, 7073, 7700, 2707, 2456, 1170, 1174, 26095, 7142],
+            gutenberg_ids= [6762],
+            d_model = 10, 
+            d_hidden = 20,
+            d_head = 5,
+            n_context = 20,
             n_layers = 2,
         )
 
@@ -247,7 +248,7 @@ def main():
         plt.legend()
         plt.savefig("LossCurve.jpg", format='jpeg', dpi=100)
     
-        print(ai.generate_text("Plato's favorite color is", 5, 0.5))
+        print(ai.generate_text("Hello", 5, 1))
 
 
 if __name__ == "__main__":
