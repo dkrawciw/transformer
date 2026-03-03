@@ -18,7 +18,8 @@ def main():
             n_layers = 10,
         )
 
-    max_length = 20
+    max_length = 100
+    temp = 0.75
     print("Ask Plato and Aristotle Bot anything you want!\nEnter \"q!\" to quit")
 
     while(True):
@@ -28,10 +29,10 @@ def main():
         if user_input == ("q!"):
             break
 
-        ai_resp = ai.generate_text(f"{user_input} Plato and Aristotle say: ", max_length)
+        ai_resp = ai.generate_text(f"{user_input} Plato and Aristotle say: ", max_length, temp)
         print(ai_resp)
     
-    rand_word = str(ai.generate_text("Plato and Aristotle", max_length=1))
+    rand_word = str(ai.generate_text("Plato and Aristotle", 1, temp))
     
     print(f"Plato and Aristotle {rand_word} goodbye!")
 
