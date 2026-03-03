@@ -3,6 +3,8 @@ import torch.nn as nn
 from dataclasses import dataclass
 
 @dataclass
+
+#config for the transformer
 class Config:
     d_model: int
     d_vocab: int
@@ -11,10 +13,10 @@ class Config:
     n_context: int
     n_layers: int
 
+#attention head
 class Attention(nn.Module):
     def __init__(self, config: Config):
         super().__init__()
-        # self.W_qk = nn.Linear(config.d_model, config.d_vocab)
         self.Wk = nn.Linear(config.d_model, config.d_head, bias=False)
         self.Wq = nn.Linear(config.d_model, config.d_head, bias=False)
         self.M = torch.triu(torch.ones((config.n_context, config.n_context)), diagonal=1)
@@ -29,8 +31,6 @@ class Attention(nn.Module):
         x_masked = xwx+ self.M 
         x_softmaxed = self.softmax(x_masked)
         x_fin = x_softmaxed@x
-        #multiply softmaxed by x
-        #multiply that by wov
         x_fin = self.second_matmult(x_fin)
         return x_fin
 
@@ -45,7 +45,8 @@ class MLP(nn.Module):
         x = torch.relu(x)
         x = self.linear_down(x)
         return x
-    
+
+#transformer block x + A(x) + MLP(X)    
 class TransformerBlock(nn.Module):
     def __init__(self, config: Config):
         super().__init__()
@@ -61,16 +62,17 @@ class Transformer(nn.Module):
     def __init__(self, config:Config):
         super().__init__()
         self.config = config
+        #embedding and positional embedding
         self.embedding = nn.Embedding(num_embeddings=config.d_vocab, embedding_dim=config.d_model)
         self.pos_embedding = nn.Embedding(config.n_context, config.d_model)
         self.transformerBlock = nn.ModuleList([TransformerBlock(config) for _ in range(config.n_layers)])
 
     def forward(self, x):
-        # Embedding with word AND word position
         x = self.embedding(x) + self.pos_embedding(torch.arange(x.shape[0]))
   
         for i, l in enumerate(self.transformerBlock):
             x = self.transformerBlock[i](x)
 
+        #unembedding step
         x = x @ self.embedding.weight.T
         return x

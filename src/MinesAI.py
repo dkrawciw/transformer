@@ -60,7 +60,7 @@ class MinesAI:
         self.data_encoded = encode(self.training_data, self.vocab_dict)
         self.training_data = torch.utils.data.TensorDataset(torch.from_numpy(self.data_encoded[:-1]),torch.from_numpy(self.data_encoded[1:]))
         self.training_loader = torch.utils.data.DataLoader(self.training_data, batch_size=self.config.n_context, shuffle=True)
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=0.001, momentum=0.9)
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=0.05, momentum=0.9, weight_decay=1e-4, nesterov=True)
         self.loss_fn = torch.nn.CrossEntropyLoss()
         self.loss_List = []
 
@@ -107,6 +107,8 @@ class MinesAI:
             # Compute the loss and its gradients
             loss = self.loss_fn(outputs, labels)
             loss.backward()
+
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
 
             # Adjust learning weights
             self.optimizer.step()
@@ -158,7 +160,7 @@ class MinesAI:
 
             epoch_number += 1
 
-    def generate_text(self, text: str, max_length: int):
+    def generate_text(self, text: str, max_length: int, temp: float):
         #print(self.vocab_dict)
         original_text = text
         text_tokenized = torch.from_numpy(encode(text=text.lower(), vocab_dict=self.vocab_dict))
@@ -176,8 +178,9 @@ class MinesAI:
             with torch.no_grad():
                 output = self.model(text_tokenized)
 
-            probs = torch.softmax(output[-1], dim=0)
+            probs = torch.softmax(output[-1]/temp, dim=0)
             output_token = torch.multinomial(probs, num_samples=1)
+            #output_token = torch.argmax(output[-1], dim=0).unsqueeze(0)
             text_tokenized = torch.cat([text_tokenized, output_token])
         
         new_tokens = text_tokenized[-max_length:]
@@ -215,17 +218,18 @@ def main():
         plt.ylabel('Loss')
         plt.legend()
         plt.savefig("LossCurve.jpg", format='jpeg', dpi=100)
-    
-        print(ai.generate_text("Homer is a poet who writes about", 20))
+        print(ai.generate_text("Plato's favorite color is", 5, 0.75))
     else:
         ai = MinesAI(
-            #gutenberg_ids = [6762, 1497, 8438, 1600, 1656],
-            gutenberg_ids= [6762],
-            d_model = 10, 
-            d_hidden = 15,
-            d_head = 2,
-            n_context = 20,
-            n_layers = 10,
+            #aristotle politics, plato republic, aristotle ethics, plato symposium, plato apology, iliad, odyssey, greek tragedies
+            #aristophanes lysistrata, herodotus histories x2, xenophon anabasis, xenophon hellenica, athenian constitution, history of pelo. war
+            gutenberg_ids = [6762, 1497, 8438, 1600, 1656, 2199, 1727, 7073, 7700, 2707, 2456, 1170, 1174, 26095, 7142],
+            #gutenberg_ids= [6762],
+            d_model = 64, 
+            d_hidden = 4*64,
+            d_head = 16,
+            n_context = 32,
+            n_layers = 2,
         )
 
         # save a loss curve
@@ -243,7 +247,7 @@ def main():
         plt.legend()
         plt.savefig("LossCurve.jpg", format='jpeg', dpi=100)
     
-        print(ai.generate_text("Homer is a poet who writes about", 20))
+        print(ai.generate_text("Plato's favorite color is", 5, 0.5))
 
 
 if __name__ == "__main__":
