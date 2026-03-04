@@ -30,7 +30,7 @@ def main():
             break
 
         ai_resp = ai.generate_text(f"{user_input} Plato and Aristotle say: ", max_length, temp)
-        print(ai_resp)
+        print("Plato and Aristotle say: " + ai_resp)
     
     rand_word = str(ai.generate_text("Plato and Aristotle", 1, temp))
     

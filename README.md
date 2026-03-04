@@ -10,14 +10,24 @@ We based our LLM on various Ancient Greek texts (English translations), with tex
 
 ## Instructions
 
-### Step 1.
+### Step 1: Sync packages
 Run uv sync to ensure the packages are correctly installed.
 ```bash
 uv sync
 ```
 
-### Step 2
+### Step 2: Model parameters
 We have a model that is pre-trained with better hyperparameters in data/saved_model.pkl. If you don't wish to use it, delete the file and the model will be retrained on a smaller dataset with smaller hyperparameters. If you want it back, just move best_model_stuff/best_saved_model.pkl to data/ and rename it to saved_model.pkl
+
+### Step 3: Run Main
+Run our main file to talk to "Plato and Aristotle" (they aren't as smart as their real-life counterparts)!
+
+```bash
+uv run main.py
+```
+
+In main.py, you can change the max_length variable to change the length of the output, and you can change the temp variable to control the temperature of the model.
+
 
 
 
