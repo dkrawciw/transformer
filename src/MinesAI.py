@@ -69,8 +69,7 @@ class MinesAI:
         # train the model on the data
         if not donttrain:
             self.__train_model()
-
-        self.save_model()
+            self.save_model()
     
     
     def getModelLoss(self):
