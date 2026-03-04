@@ -78,4 +78,4 @@ Shane Ritter: Helped find syntax for pytorch. Added the transformer class which 
 
 Sawyer Allen:
 
-Daniel Krawciw:
+Daniel Krawciw: Split code into files, setup tests, compiled gutenberg and tokenize code from Michael's work for our purposes, general debugging, and pkl file code.
