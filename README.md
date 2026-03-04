@@ -26,7 +26,6 @@ uv run main.py
 
 In main.py, you can change the max_length variable to change the length of the output, and you can change the temp variable to control the temperature of the model.
 
-<<<<<<< Updated upstream
 ### Step 3: Rerun the model modifying the parameters
 
 We have a pretrained model in `data/saved_model.pkl`. If you wish to retrain the model, **delete** the file, and run `uv run main.py`. The model will be retrained on a smaller dataset with smaller hyperparameters. If you want it back, just move `best_model_stuff/best_saved_model.pkl` to `data/` and rename it to `saved_model.pkl`.
@@ -50,8 +49,11 @@ Are results were much better on the trained data then the untrained. For the bes
 ### Example outputs
 
 Untrained model:
+
 The greatest Greek city is: city city city city city city city city city city
+
 Trained model:
+
 The greatest Greek city is: of the braves , he will be and end ,
 
 ## Design Choices
