@@ -7,13 +7,14 @@ import traceback
 import matplotlib.pyplot as plt
 
 # Our own classes/functions
-from Transformer import Config, Transformer
-from tokenizer import (
+from .Transformer import Config, Transformer
+from .tokenizer import (
     gutenberg_to_tokenized,
     tokenized_to_vocab,
     encode,
     decode,
 )
+
 
 # Create a directory for trained object saves
 import pickle as pkl
@@ -186,7 +187,7 @@ class MinesAI:
         new_tokens = text_tokenized[-max_length:]
         new_text = decode(new_tokens.numpy(), vocab_arr=self.vocab_arr)
 
-        return original_text + " " + new_text
+        return new_text
     
     def save_model(self) -> None:
         with open(DATA_DIR / "saved_model.pkl", "wb") as pkl_file:
