@@ -19,3 +19,11 @@ ai_untrained = MinesAI(
 
 ai_trained = MinesAI.load_model()
 
+prompt = "The greatest Greek city is:"
+length = 10
+temp = 0.7
+print(f"Prompt is {prompt}")
+print("Untrained model:")
+print(prompt+" "+ai_untrained.generate_text(prompt, length, temp))
+print("Trained Model:")
+print(prompt+" "+ai_trained.generate_text(prompt, length, temp))
