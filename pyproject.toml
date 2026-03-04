@@ -13,7 +13,8 @@ dependencies = [
     "setuptools>=82.0.0",
     "jaxtyping>=0.3.7",
     "tensorboard>=2.20.0",
-    "matplotlib"
+    "matplotlib",
+    "seaborn>=0.13.2",
 ]
 
 [tool.setuptools.packages.find]
