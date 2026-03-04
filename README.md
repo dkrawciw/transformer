@@ -44,7 +44,8 @@ We have a pretrained model in `data/saved_model.pkl`. If you wish to retrain the
 
 ## Results
 
-Are results were much better on the trained data then the untrained. For the best model trained we have a total net loss of 22. With it starting around 28 ending around 6. When the model was untrained we got the same word over and over. Our trained model gets a somewhat cohesive sentence, but it still doesn't really understand the context of the surrounding text, however it still does significantly better than our untrained model.
+Are results were much better on the trained data then the untrained. For the best model trained we have a total net loss of 22. With it starting around 28 ending around 6. (The loss curve can be found in best_model_stuff/best_losscurve.png) When the model was untrained we got the same word over and over. Our trained model gets a somewhat cohesive sentence, but it still doesn't really understand the context of the surrounding text, however it still does significantly better than our untrained model. The data that we used were books from plato and aristotle because we thought it would be funny if our LLM spoke like ancient philosophers.
+
 
 ### Example outputs
 
