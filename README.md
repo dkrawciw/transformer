@@ -17,5 +17,7 @@ uv sync
 ```
 
 ### Step 2
-We have a model that is pre-trained with better hyperparameters in best_model_stuff/best_saved_model.pkl. If you wish to use that model, move the pkl file to the data folder and name it to saved_model.pkl. If not, the transformer will train and save it's weights to data/saved_model.pkl
+We have a model that is pre-trained with better hyperparameters in data/saved_model.pkl. If you don't wish to use it, delete the file and the model will be retrained on a smaller dataset with smaller hyperparameters. If you want it back, just move best_model_stuff/best_saved_model.pkl to data/ and rename it to saved_model.pkl
+
+
 
