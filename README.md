@@ -29,3 +29,13 @@ In main.py, you can change the max_length variable to change the length of the o
 ### Step 3: Rerun the model modifying the parameters
 
 We have a pretrained model in `data/saved_model.pkl`. If you wish to retrain the model, **delete** the file, and run `uv run main.py`. The model will be retrained on a smaller dataset with smaller hyperparameters. If you want it back, just move `best_model_stuff/best_saved_model.pkl` to `data/` and rename it to `saved_model.pkl`.
+
+## File Structure
+
+`src/` - Contains actual code for the transformer and chatbot
+
+`data/` - Stores trained models to be loaded
+
+`best_model_stuff/` - Stores the model with the most training and our loss curve
+
+`test/` - Test files to give easy gut-checks to know if everything is working correctly
