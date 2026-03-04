@@ -38,6 +38,7 @@ class MinesAI:
                  d_head: int,
                  n_context: int,
                  n_layers: int,
+                 donttrain: bool = False
     ):
         # Grab the data from Project Gutenberg
         self.training_data, self.tokenized_training_data = gutenberg_to_tokenized(gutenberg_ids)
@@ -66,9 +67,9 @@ class MinesAI:
         self.loss_List = []
 
         # train the model on the data
-        self.__train_model()
-
-        self.save_model()
+        if not donttrain:
+            self.__train_model()
+            self.save_model()
     
     
     def getModelLoss(self):
