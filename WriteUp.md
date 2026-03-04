@@ -1,3 +1,9 @@
+## Results
+
+
+# Example outputs
+
+
 ## Design Choices
 
 We went with an OOP transformer with some tests in the test dir/folder. Then to not run a training loop multiple times we saved the model into a .pkl file. This was done in the MinesAI.py file. We chose this as it would result in a more organized code base. Which would be easier to run and find where code pieces were.
