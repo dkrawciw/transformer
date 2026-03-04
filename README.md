@@ -76,6 +76,6 @@ Some future directions could include better embedding as well as improving token
 
 Shane Ritter: Helped find syntax for pytorch. Added the transformer class which ran through are TBs and embedding. Coded up the start of the train() and the __train_one_epoch(). Created the plot for the loss curve. Wrote most of the write up.
 
-Sawyer Allen:
+Sawyer Allen: I wrote the generate_text method for the transformer, did various debuggings, and wrote the trained vs untrained script.
 
 Daniel Krawciw: Split code into files, setup tests, compiled gutenberg and tokenize code from Michael's work for our purposes, general debugging, and pkl file code.
